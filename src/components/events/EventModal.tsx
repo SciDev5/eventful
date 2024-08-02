@@ -37,6 +37,7 @@ export function EventModal({ event, schedule, dismiss }: { event: EventInfo, sch
                 ref={ref}
                 className={styles.s}
                 onClick={dismiss_on_click}
+                onClose={dismiss}
             >
                 <div style={css_vars({ color: color.to_hex(0.2), color_light: color.to_hex(.1) })}>
                     <div className={styles.event_time}>
@@ -56,12 +57,12 @@ export function EventModal({ event, schedule, dismiss }: { event: EventInfo, sch
 
                     <div className={styles.event_host}>{event.hosts.map(host_id => (<span style={css_vars({ host_color: schedule.hosts[host_id].color.to_hex() })} key={host_id}>{schedule.hosts[host_id].name}</span>))}</div>
 
-                    {event.group && <div className={styles.event_group}>{schedule.groups[event.group].name}</div>}
+                    {event.group != null && <div className={styles.event_group}>{schedule.groups[event.group].name}</div>}
 
                     <div className={styles.event_location}>{schedule.locations[event.location].name}</div>
 
                     <div className={styles.event_tags}>
-                        {event.tags.map(tag_id => (<Chip text={schedule.tags[tag_id].name} color={schedule.tags[tag_id].color} key={tag_id} />))}
+                        {event.tags.map(tag_id => (<Chip color={schedule.tags[tag_id].color} key={tag_id}>{schedule.tags[tag_id].name}</Chip>))}
                     </div>
                 </div>
 

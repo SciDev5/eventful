@@ -9,18 +9,19 @@ import { Chip } from "../chip/Chip";
 import { Color } from "@/util/color";
 import { EventModal, EventModalShower } from "./EventModal";
 
-export function EventTimeline({ event_schedule, timerange, rem_per_hr, color_from_hosts }: {
+export function EventTimeline({ event_schedule, timerange, rem_per_hr, event_filter, color_from_hosts }: {
     event_schedule: EventSchedule,
     timerange: Timerange,
     rem_per_hr: number,
+    event_filter: (event: EventInfo) => boolean,
     color_from_hosts?: boolean,
 }) {
     const tracks = useMemo(
         () => assemble_tracks(
             timerange,
-            event_schedule.events
+            event_schedule.events.filter(event_filter)
         ).map(tr => tr.map(ent => ({ ...ent, data: { event: ent.data } }))),
-        [timerange, event_schedule],
+        [timerange, event_schedule, event_filter],
     )
     const timetrack: TrackData<{ date: Date }> = useMemo(
         () => new Array(Math.ceil(timerange.length_hours)).fill(0)
@@ -113,12 +114,11 @@ function TimelineTrackEvent({ event, schedule, color_from_hosts, modal_control }
                 <span className={styles.line} />
                 <span>{event.time.end.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}</span>
             </div>
-            {/* <div className={styles.event_description}>{event.description}</div> */}
             <div className={styles.event_host}>{event.hosts.map(host_id => (<span style={css_vars({ host_color: schedule.hosts[host_id].color.to_hex() })} key={host_id}>{schedule.hosts[host_id].name}</span>))}</div>
             {/* {event.group && <div className={styles.event_group}>{schedule.groups[event.group].name}</div>} */}
             <div className={styles.event_location}>{schedule.locations[event.location].name}</div>
             <div className={styles.event_tags}>
-                {event.tags.map(tag_id => (<Chip text={schedule.tags[tag_id].name} color={schedule.tags[tag_id].color} key={tag_id} />))}
+                {event.tags.map(tag_id => (<Chip color={schedule.tags[tag_id].color} key={tag_id}>{schedule.tags[tag_id].name}</Chip>))}
             </div>
         </div>
     </div>)
