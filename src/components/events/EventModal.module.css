@@ -1,0 +1,97 @@
+.s {
+    position: fixed;
+    display: block;
+    top: 20vh;
+    bottom: 20vh;
+    left: calc(50vw - 30rem);
+    width: 60rem;
+    background: #0009;
+    backdrop-filter: blur(1rem);
+    border: none;
+
+    font-size: 1.2em;
+}
+
+.s::backdrop {
+    background: #0007;
+    backdrop-filter: blur(0.25rem);
+}
+
+.s>div {
+    border: 1px solid var(--color);
+}
+
+.event_name {
+    margin-inline: 1px;
+    padding: .5em .5em;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.event_description {
+    flex: 1 1;
+    padding: 1rem 1rem;
+    overflow-y: scroll;
+    background: linear-gradient(to right, var(--color_light), transparent);
+}
+
+.event_time {
+    display: flex;
+    background: var(--color);
+    padding: .5rem 1rem;
+}
+
+.event_time .line {
+    flex: 1 1;
+    height: 1px;
+    background: currentColor;
+    display: inline-block;
+    margin-top: 0.6em;
+    margin-inline: .25em;
+}
+
+.event_host {
+    font-weight: bold;
+    background: var(--color);
+    padding: 0.75em 0.75em;
+
+    font-size: 1.2em;
+
+    font-weight: bold;
+}
+
+.event_host span::before {
+    content: "";
+    display: inline-block;
+    width: .8em;
+    height: .8em;
+    margin-right: 0.5em;
+    margin-bottom: 0.3em;
+    vertical-align: bottom;
+    background: var(--host_color);
+}
+
+.event_host span {
+    margin-right: 1rem;
+
+}
+
+.event_group {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--color);
+}
+
+.event_location {
+    padding: 1rem 1.5rem;
+    background: linear-gradient(to right, var(--color_light), transparent);
+
+    font-weight: bold;
+}
+
+.event_tags {
+    padding: 1rem 1.5rem;
+    margin-inline: 1px;
+    overflow-x: scroll;
+    text-wrap: nowrap;
+    position: relative;
+}

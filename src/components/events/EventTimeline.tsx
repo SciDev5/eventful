@@ -1,12 +1,13 @@
 "use client";
 
 import { EventInfo, EventSchedule, Timerange } from "@/data/schedule";
-import { Attributes, Fragment, useMemo } from "react";
+import { Attributes, Fragment, useCallback, useMemo, useState } from "react";
 import styles from "./EventTimeline.module.css";
 import { css_vars } from "@/util/css";
 import { swap } from "@/util/arr";
 import { Chip } from "../chip/Chip";
 import { Color } from "@/util/color";
+import { EventModal, EventModalShower } from "./EventModal";
 
 export function EventTimeline({ event_schedule, timerange, rem_per_hr, color_from_hosts }: {
     event_schedule: EventSchedule,
@@ -18,7 +19,7 @@ export function EventTimeline({ event_schedule, timerange, rem_per_hr, color_fro
         () => assemble_tracks(
             timerange,
             event_schedule.events
-        ).map(tr => tr.map(ent => ({ ...ent, data: { event: ent.data, schedule: event_schedule } }))),
+        ).map(tr => tr.map(ent => ({ ...ent, data: { event: ent.data } }))),
         [timerange, event_schedule],
     )
     const timetrack: TrackData<{ date: Date }> = useMemo(
@@ -31,9 +32,22 @@ export function EventTimeline({ event_schedule, timerange, rem_per_hr, color_fro
             })),
         [timerange]
     )
-    const passthrough = useMemo(() => ({ color_from_hosts: color_from_hosts ?? false }), [color_from_hosts])
+
+    const modal_control = useMemo(() => ({
+        set_modal: (e: EventInfo | null) => {
+            console.warn("failed to set modal_control.set_modal in time")
+        }
+    }), [])
+
+
+    const passthrough = useMemo(() => ({
+        schedule: event_schedule,
+        color_from_hosts: color_from_hosts ?? false,
+        modal_control,
+    }), [event_schedule, color_from_hosts, modal_control])
     return (
         <div className={styles.timeline_time_scroll}>
+            <EventModalShower control_ref={modal_control} schedule={event_schedule} />
             <div className={styles.timeline_space_scroll_container} style={css_vars({ width: rem_per_hr * timerange.length_hours })}>
                 <TimelineTrack
                     track_data={timetrack}
@@ -77,8 +91,11 @@ function ColorHeader({ ids, lut }: { ids: number[], lut: { color: Color }[] }) {
         {ids.length === 0 && <div className={styles.no_color} />}
     </div>)
 }
-function TimelineTrackEvent({ event, schedule, color_from_hosts }: { event: EventInfo, schedule: EventSchedule, color_from_hosts: boolean }) {
-    return (<div className={styles.event}>
+function TimelineTrackEvent({ event, schedule, color_from_hosts, modal_control }: { event: EventInfo, schedule: EventSchedule, color_from_hosts: boolean, modal_control: { set_modal: (ev: EventInfo | null) => void } }) {
+
+    const summon_modal = useCallback(() => modal_control.set_modal(event), [event, modal_control])
+
+    return (<div className={styles.event} onClick={summon_modal}>
         {
             color_from_hosts
                 ? <ColorHeader ids={event.hosts} lut={schedule.hosts} />
