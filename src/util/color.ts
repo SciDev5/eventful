@@ -41,6 +41,12 @@ export class Color {
         )
     }
 
+    contrasting_text_color() {
+        // https://stackoverflow.com/questions/596216/formula-to-determine-perceived-brightness-of-rgb-color
+        const luma = Math.sqrt(0.299 * this.r * this.r + 0.587 * this.g * this.g + 0.114 * this.b * this.b)
+        return luma > 0.75 ? new Color(0, 0, 0) : new Color(1, 1, 1)
+    }
+
     to_hex(alpha = this.a): string {
         return `#${clamp(Math.floor(this.r * 256), 0, 255).toString(16).padStart(2, "0")
             }${clamp(Math.floor(this.g * 256), 0, 255).toString(16).padStart(2, "0")

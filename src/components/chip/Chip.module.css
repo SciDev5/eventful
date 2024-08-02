@@ -1,13 +1,15 @@
 .chip {
     display: inline-block;
     text-wrap: nowrap;
-    max-width: 10rem;
+    max-width: 10em;
     overflow-x: scroll;
     background: var(--chip_bg);
     color: var(--chip_fg);
-    border: 2px solid var(--chip_border);
-    border-radius: 2em;
+    border-left: .25em solid var(--chip_border);
+    vertical-align: text-bottom;
+    /* border-radius: 2em; */
 
-    margin: 0.25rem 0.25rem;
-    padding: 0.05rem 0.5rem;
+    margin: 0.25em 0.25em;
+    padding: 0.2em 0.5em;
+    padding-right: 0.75em;
 }

@@ -7,6 +7,8 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Eventful",
   description: "View and search event schedules.",
+  // "apple-mobile-web-app-capable": "yes",
+  appleWebApp: { capable: true, title: "Eventful", statusBarStyle: "black" },
 };
 
 export default function RootLayout({

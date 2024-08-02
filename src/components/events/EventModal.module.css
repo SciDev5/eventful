@@ -1,23 +1,41 @@
-.s {
+.event_modal {
     position: fixed;
     display: block;
     top: 20vh;
-    bottom: 20vh;
-    left: calc(50vw - 30rem);
-    width: 60rem;
-    background: #0009;
-    backdrop-filter: blur(1rem);
+    max-height: calc(60vh);
+    left: calc(max(50vw - 30em, 10vw));
+    width: calc(min(80vw, 60em));
+    background: #2247;
+    backdrop-filter: blur(1em);
     border: none;
 
     font-size: 1.2em;
+
+    box-shadow:
+        2px 2px 0px 0px #112,
+        4px 4px 0px 0px #000,
+        6px 6px 0px 0px #112,
+        8px 8px 0px 0px #224,
+
+        6px 8px 0px 0px #224f,
+        4px 6px 0px 0px #224f,
+        2px 4px 0px 0px #224a,
+        0px 2px 0px 0px #2244,
+
+        8px 6px 0px 0px #224f,
+        6px 4px 0px 0px #224f,
+        4px 2px 0px 0px #224a,
+        2px 0px 0px 0px #2245;
+
+    outline: none;
 }
 
-.s::backdrop {
-    background: #0007;
-    backdrop-filter: blur(0.25rem);
+.event_modal::backdrop {
+    background: #07071099;
+    backdrop-filter: blur(0.25em);
 }
 
-.s>div {
+.event_modal>div {
     border: 1px solid var(--color);
 }
 
@@ -30,7 +48,7 @@
 
 .event_description {
     flex: 1 1;
-    padding: 1rem 1rem;
+    padding: 1em 1em;
     overflow-y: scroll;
     background: linear-gradient(to right, var(--color_light), transparent);
 }
@@ -38,7 +56,7 @@
 .event_time {
     display: flex;
     background: var(--color);
-    padding: .5rem 1rem;
+    padding: .5em 1em;
 }
 
 .event_time .line {
@@ -72,24 +90,24 @@
 }
 
 .event_host span {
-    margin-right: 1rem;
+    margin-right: 1em;
 
 }
 
 .event_group {
-    padding: 1rem 1.5rem;
+    padding: 1em 1.5em;
     border-bottom: 1px solid var(--color);
 }
 
 .event_location {
-    padding: 1rem 1.5rem;
+    padding: 1em 1.5em;
     background: linear-gradient(to right, var(--color_light), transparent);
 
     font-weight: bold;
 }
 
 .event_tags {
-    padding: 1rem 1.5rem;
+    padding: 1em 1.5em;
     margin-inline: 1px;
     overflow-x: scroll;
     text-wrap: nowrap;

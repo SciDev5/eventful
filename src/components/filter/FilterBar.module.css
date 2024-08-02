@@ -1,0 +1,134 @@
+.filter_bar {
+    display: flex;
+    flex-wrap: wrap;
+    padding: .5em .5em;
+}
+
+.filter_taglike {
+    display: inline-block;
+    position: relative;
+    --w: 20em;
+    min-width: var(--w);
+    max-width: var(--w);
+
+    border: 1px solid #224;
+
+    margin: .25em .5em;
+}
+
+.filter_taglike_preview {
+    text-wrap: nowrap;
+    display: flex;
+}
+
+.filter_taglike_preview .placeholder {
+    display: inline-block;
+    margin: 0.25em 0.25em;
+    padding: 0.2em 0.5em;
+    padding-right: 0.75em;
+    color: #448;
+    vertical-align: text-bottom;
+}
+
+.label {
+    display: inline-block;
+    margin: 0.25em 0.25em;
+    padding: 0.2em 0.5em;
+    padding-right: 0.75em;
+    color: #ddf;
+    vertical-align: text-bottom;
+}
+
+.scroller {
+    overflow-x: scroll;
+    flex: 1 1;
+
+    background: #112;
+    border-left: 2px solid #224;
+}
+
+.filter_taglike_body {
+    width: var(--w);
+}
+
+.filter_taglike_body {
+    display: flex;
+    flex-direction: column;
+    border: none;
+
+    max-height: 60vh;
+    overflow-y: scroll;
+
+    z-index: 10;
+}
+
+.filter_taglike:not(.focused_outer):not(:hover):not(:focus-within:not(:focus)) .filter_taglike_body {
+    display: none;
+}
+
+.filter_taglike_entry {
+    flex: 0 0;
+    padding: 0.5em 1em;
+    border-left: .5em solid var(--color);
+}
+
+.filter_taglike_entry>input {
+    appearance: none;
+}
+
+.filter_taglike_entry:has(input:checked) {
+    color: var(--text_color);
+    background-color: var(--color);
+}
+
+.filter_searchbar {
+    flex: 1 1;
+    display: inline-flex;
+    color: #ddf;
+    border: 1px solid #224;
+    margin: .25em .5em;
+}
+
+.filter_searchbar>span {
+    display: inline-block;
+    flex: 0 0;
+    padding: 0.45em 0.75em;
+    color: #ddf;
+}
+
+.filter_searchbar>input {
+    flex: 1 0;
+    padding: calc(0.45em - 2px) 0.75em;
+    color: #ddf;
+    background: #112;
+    border: none;
+    font-size: 1em;
+    border-left: 2px solid #224;
+}
+
+.filter_searchbar>input::placeholder {
+    color: #448;
+}
+
+
+
+.ext_toggle {
+    flex: 1 1;
+    display: inline-flex;
+    background: #224;
+    border: 1px solid #224;
+    margin: .25em .5em;
+}
+
+.ext_toggle>span {
+    display: inline-block;
+    flex: 1 0;
+    padding: 0.45em 0.75em;
+    color: #ddf;
+    text-wrap: nowrap;
+    text-align: center;
+}
+
+.ext_toggle>input {
+    appearance: none;
+}

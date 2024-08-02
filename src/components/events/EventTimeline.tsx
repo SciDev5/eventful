@@ -1,7 +1,7 @@
 "use client";
 
 import { EventInfo, EventSchedule, Timerange } from "@/data/schedule";
-import { Attributes, Fragment, useCallback, useMemo, useState } from "react";
+import { Attributes, Fragment, RefObject, useCallback, useMemo, useState } from "react";
 import styles from "./EventTimeline.module.css";
 import { css_vars } from "@/util/css";
 import { swap } from "@/util/arr";
@@ -9,13 +9,16 @@ import { Chip } from "../chip/Chip";
 import { Color } from "@/util/color";
 import { EventModal, EventModalShower } from "./EventModal";
 
-export function EventTimeline({ event_schedule, timerange, rem_per_hr, event_filter, color_from_hosts }: {
+export function EventTimeline({ event_schedule, timerange, em_per_hr, event_filter, color_from_hosts, time_scroll_ref }: {
     event_schedule: EventSchedule,
     timerange: Timerange,
-    rem_per_hr: number,
+    em_per_hr: number | "inherit",
     event_filter: (event: EventInfo) => boolean,
     color_from_hosts?: boolean,
+    time_scroll_ref?: RefObject<HTMLDivElement>,
 }) {
+    console.log(event_schedule, timerange, em_per_hr, event_filter, color_from_hosts);
+
     const tracks = useMemo(
         () => assemble_tracks(
             timerange,
@@ -47,9 +50,13 @@ export function EventTimeline({ event_schedule, timerange, rem_per_hr, event_fil
         modal_control,
     }), [event_schedule, color_from_hosts, modal_control])
     return (
-        <div className={styles.timeline_time_scroll}>
+        <div
+            className={styles.timeline_time_scroll}
+            style={css_vars({ length_hours: timerange.length_hours, ...em_per_hr !== "inherit" ? { em_per_hr } : {} })}
+            ref={time_scroll_ref}
+        >
             <EventModalShower control_ref={modal_control} schedule={event_schedule} />
-            <div className={styles.timeline_space_scroll_container} style={css_vars({ width: rem_per_hr * timerange.length_hours })}>
+            <div className={styles.timeline_space_scroll_container}>
                 <TimelineTrack
                     track_data={timetrack}
                     passthrough={{}}
@@ -57,14 +64,14 @@ export function EventTimeline({ event_schedule, timerange, rem_per_hr, event_fil
                 />
                 <div className={styles.timeline_space_scroll}>
                     {
-                        tracks.map((t, i) => (
+                        useMemo(() => tracks.map((t, i) => (
                             <TimelineTrack
                                 track_data={t}
                                 passthrough={passthrough}
                                 Inner={TimelineTrackEvent}
                                 key={i}
                             />
-                        ))
+                        )), [passthrough, tracks])
                     }
                     <div className={styles.antihover} />
                 </div>
@@ -105,9 +112,9 @@ function TimelineTrackEvent({ event, schedule, color_from_hosts, modal_control }
         <div className={styles.event_name}>
             {event.name}
         </div>
-        <div className={styles.event_description + " " + styles.hide_no_hov}>
+        {/* <div className={styles.event_description + " " + styles.hide_no_hov}>
             {event.description}
-        </div>
+        </div> */}
         <div className={styles.hide_no_hov}>
             <div className={styles.event_time}>
                 <span>{event.time.start.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })}</span>

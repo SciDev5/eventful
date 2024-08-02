@@ -35,9 +35,10 @@ export function EventModal({ event, schedule, dismiss }: { event: EventInfo, sch
         <>
             <dialog
                 ref={ref}
-                className={styles.s}
+                className={styles.event_modal}
                 onClick={dismiss_on_click}
                 onClose={dismiss}
+                tabIndex={-1}
             >
                 <div style={css_vars({ color: color.to_hex(0.2), color_light: color.to_hex(.1) })}>
                     <div className={styles.event_time}>
