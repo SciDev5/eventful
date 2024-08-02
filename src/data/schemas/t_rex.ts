@@ -1,4 +1,4 @@
-import { Color } from "../color";
+import { Color } from "../../util/color";
 import { EventInfo, EventSchedule, GroupInfo, HostInfo, LocationInfo, TagInfo, Timerange } from "../schedule";
 
 export type TRexAPIResponse = {
@@ -54,37 +54,39 @@ export function trex_to_schedule(trex: TRexAPIResponse): EventSchedule {
         return { name, color }
     })
 
-    const events = trex.events.map(({ name, description, start, end, ...v }) => {
-        if (!locations_lookup.has(v.location)) {
-            const i = locations.length
-            locations.push({ name: v.location })
-            locations_lookup.set(v.location, i)
-        }
-        const location = locations_lookup.get(v.location)!
-        const hosts = v.dorm.map(dorm => hosts_lookup.get(dorm)!)
-        const tags = v.tags.map(tag => tags_lookup.get(tag)!)
-        let group = null
-        if (v.group != null) {
-            if (!groups_lookup.has(v.group)) {
-                const i = groups.length
-                groups.push({ name: v.group, associated_dorms: new Set() })
-                groups_lookup.set(v.group, i)
+    const events = trex.events
+        // .filter(({ end }) => (new Date(end).getTime() < new Date("2024-08-24T20:51:00-04:00").getTime()))
+        .map(({ name, description, start, end, ...v }) => {
+            if (!locations_lookup.has(v.location)) {
+                const i = locations.length
+                locations.push({ name: v.location })
+                locations_lookup.set(v.location, i)
             }
-            group = groups_lookup.get(v.group)!
-            for (const host of hosts) {
-                groups[group].associated_dorms.add(host)
+            const location = locations_lookup.get(v.location)!
+            const hosts = v.dorm.map(dorm => hosts_lookup.get(dorm)!)
+            const tags = v.tags.map(tag => tags_lookup.get(tag)!)
+            let group = null
+            if (v.group != null) {
+                if (!groups_lookup.has(v.group)) {
+                    const i = groups.length
+                    groups.push({ name: v.group, associated_dorms: new Set() })
+                    groups_lookup.set(v.group, i)
+                }
+                group = groups_lookup.get(v.group)!
+                for (const host of hosts) {
+                    groups[group].associated_dorms.add(host)
+                }
             }
-        }
-        return {
-            name,
-            description,
-            time: new Timerange(new Date(start), new Date(end)),
-            hosts,
-            location,
-            tags,
-            group,
-        } satisfies EventInfo
-    })
+            return {
+                name,
+                description,
+                time: new Timerange(new Date(start), new Date(end)),
+                hosts,
+                location,
+                tags,
+                group,
+            } satisfies EventInfo
+        })
 
     return {
         name: trex.name,

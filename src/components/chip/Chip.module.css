@@ -1,0 +1,13 @@
+.chip {
+    display: inline-block;
+    text-wrap: nowrap;
+    max-width: 10rem;
+    overflow-x: scroll;
+    background: var(--chip_bg);
+    color: var(--chip_fg);
+    border: 2px solid var(--chip_border);
+    border-radius: 2em;
+
+    margin: 0.25rem 0.25rem;
+    padding: 0.05rem 0.5rem;
+}

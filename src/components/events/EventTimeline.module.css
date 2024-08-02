@@ -1,0 +1,215 @@
+.timeline_time_scroll {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    display: flex;
+    flex: 1 1;
+}
+
+.timeline_space_scroll_container {
+    display: flex;
+    flex: 1 1;
+    flex-direction: column;
+    width: calc(1rem * var(--width));
+}
+
+.timeline_space_scroll_container>.track {
+    flex: 0 0;
+}
+
+
+
+.timeline_space_scroll {
+    flex: 1 1;
+    overflow-y: scroll;
+}
+
+.track {
+    display: flex;
+    width: calc(1rem * var(--width));
+
+    border-bottom: 1px dashed #223;
+    padding-block: .25rem;
+}
+
+.track>div {
+    width: calc(var(--width) * 100%);
+    overflow: hidden;
+}
+
+.track:hover .event {
+    height: 18rem;
+}
+
+.antihover {
+    height: calc(20rem);
+}
+
+.track:not(:hover) .event {
+    height: 2.5rem;
+}
+
+.track_time {
+    padding: .3rem .5rem;
+    text-wrap: nowrap;
+}
+
+.track_time>*:nth-child(1) {
+    font-size: .75em;
+    display: flex;
+    overflow: hidden;
+}
+
+.track_time>*:nth-child(1)>span {
+    overflow: hidden;
+}
+
+.track_time>*:nth-child(1)>span:nth-child(1) {
+    flex: 1 1;
+}
+
+.track_time>*:nth-child(2) {
+    overflow: hidden;
+    text-align: center;
+}
+
+.track_time.day {
+    background: rgb(19, 14, 0);
+    box-shadow: inset -1px 0px 0px 0px #6447;
+}
+
+.track_time.night {
+    background: rgb(6, 1, 19);
+    box-shadow: inset -1px 0px 0px 0px #4467;
+}
+
+
+.event {
+    display: flex;
+    flex-direction: column;
+
+    background: #223;
+    color: #fff;
+
+    clip-path: polygon(0% 0%,
+            calc(100% - .5rem) 0%,
+            100% .5rem,
+            100% 100%,
+            0% 100%);
+
+    box-shadow: inset 0px 0px 0px 1px #446;
+}
+
+.track:not(:hover) .hide_no_hov {
+    display: none;
+}
+
+.event_name {
+    padding: .25rem .5rem;
+    margin-inline: 1px;
+    text-wrap: nowrap;
+    overflow: hidden;
+    position: relative;
+}
+
+.track:hover .event_name {
+    text-wrap: unset;
+    /* flex-grow: 1; */
+    padding: .5em .5em;
+    font-weight: bold;
+    /* border-bottom: 1px solid #446; */
+}
+
+.event_description {
+    flex: 1 1;
+    padding: .5rem .5rem;
+    overflow-y: scroll;
+}
+
+.event_time {
+    display: flex;
+    background: #446;
+    padding: .25rem .5rem;
+    font-size: .75em;
+}
+
+.event_time .line {
+    flex: 1 1;
+    height: 1px;
+    background: currentColor;
+    display: inline-block;
+    margin-top: 0.6em;
+    margin-inline: .25em;
+}
+
+.event_host {
+    font-weight: bold;
+    background: #446;
+    padding: .5rem .5rem;
+
+    font-weight: bold;
+}
+
+.event_host span::before {
+    content: "";
+    display: inline-block;
+    width: .8rem;
+    height: .8rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.3rem;
+    vertical-align: bottom;
+    background: var(--host_color);
+}
+
+.event_host span {
+    margin-right: 1rem;
+
+}
+
+.event_group {
+    padding: .25rem .5rem;
+    border-bottom: 1px solid #446;
+}
+
+.event_location {
+    padding: .5rem .5rem;
+    padding-bottom: 0rem;
+    font-size: .75rem;
+    font-weight: bold;
+}
+
+.event_tags {
+    padding: .25rem .5rem;
+    margin-inline: 1px;
+    overflow-x: scroll;
+    text-wrap: nowrap;
+    position: relative;
+}
+
+.track:not(:hover) .event_name:after {
+    --w: 2rem;
+    content: "";
+    box-shadow: inset calc(-1 * var(--w)) 0px calc(0.5 * var(--w)) calc(-0.5 * var(--w)) #223;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: var(--w);
+}
+
+
+.colors {
+    display: flex;
+}
+
+.colors>div {
+    flex: 1 1;
+    background: var(--color);
+    height: .5rem;
+}
+
+.colors>.no_color {
+    background: repeating-linear-gradient(-135deg, transparent, transparent 0.35355339059rem, #777 0.35355339059rem, #777 0.70710678118rem);
+    /* background: repeating-linear-gradient(-135deg, transparent, transparent .5rem, #777 .5rem, #777 1rem); */
+    background-position: top left;
+
+}

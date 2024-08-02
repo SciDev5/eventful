@@ -24,11 +24,27 @@ export class Color {
             return null
         }
     }
+    blend_to_white(amt: number): Color {
+        return new Color(
+            1 - (1 - this.r) * (1 - amt),
+            1 - (1 - this.g) * (1 - amt),
+            1 - (1 - this.b) * (1 - amt),
+            this.a,
+        )
+    }
+    blend_to_black(amt: number): Color {
+        return new Color(
+            this.r * (1 - amt),
+            this.g * (1 - amt),
+            this.b * (1 - amt),
+            this.a,
+        )
+    }
 
-    to_hex(): string {
-        return `#${clamp(Math.floor(this.r * 256), 0, 255)
-            }${clamp(Math.floor(this.g * 256), 0, 255)
-            }${clamp(Math.floor(this.b * 256), 0, 255)
-            }${clamp(Math.floor(this.a * 256), 0, 255)}`
+    to_hex(alpha = this.a): string {
+        return `#${clamp(Math.floor(this.r * 256), 0, 255).toString(16).padStart(2, "0")
+            }${clamp(Math.floor(this.g * 256), 0, 255).toString(16).padStart(2, "0")
+            }${clamp(Math.floor(this.b * 256), 0, 255).toString(16).padStart(2, "0")
+            }${clamp(Math.floor(alpha * 256), 0, 255).toString(16).padStart(2, "0")}`
     }
 }

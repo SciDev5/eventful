@@ -1,4 +1,4 @@
-import { Color } from "./color"
+import { Color } from "../util/color"
 
 export interface EventSchedule {
     readonly time: Timerange,
@@ -35,10 +35,25 @@ export class Timerange {
         this.end = end.getTime() > start.getTime() ? end : start // ensure length >= 0
     }
 
+    get length_ms() { return (this.end.getTime() - this.start.getTime()) }
     get length_seconds() { return (this.end.getTime() - this.start.getTime()) / 1000 }
+    get length_hours() { return (this.end.getTime() - this.start.getTime()) / 1000 / 60 / 60 }
 
     overlaps(other: Timerange): boolean {
         return other.start < this.end && this.start < other.end
+    }
+    merge(other: Timerange): Timerange {
+        return new Timerange(
+            this.start < other.start ? this.start : other.start,
+            this.end > other.end ? this.end : other.end,
+        )
+    }
+    round_outward(interval_ms: number, base: Date = new Date("2024-01-01 00:00")): Timerange {
+        const base_ms = base.getTime()
+        return new Timerange(
+            new Date(Math.floor((this.start.getTime() - base_ms) / interval_ms) * interval_ms + base_ms),
+            new Date(Math.ceil((this.end.getTime() - base_ms) / interval_ms) * interval_ms + base_ms),
+        )
     }
 }
 
