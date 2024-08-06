@@ -7,12 +7,14 @@ import { css_vars } from "@/util/css";
 import { clamp } from "@/util/math";
 
 
-export function EventViewerLoading() {
+export function EventViewerDataMissing({ failed }: { failed: string | false }) {
     return (
         <div className={styles.root_container}>
             <div style={{ flex: "1 0" }} />
             <div style={{ flex: "0 0", fontSize: "min(20vh, 10vw)", color: "#1137", textAlign: "center" }}>
-                loading...
+                {failed !== false
+                    ? `Failed to locate event schedule '${failed}'.`
+                    : "loading..."}
             </div>
             <div style={{ flex: "1 0" }} />
         </div>
