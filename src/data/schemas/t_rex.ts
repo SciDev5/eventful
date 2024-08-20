@@ -44,13 +44,13 @@ export function trex_to_schedule(trex: TRexAPIResponse): EventSchedule {
     const hosts_lookup = new Map<string, number>()
     const hosts: HostInfo[] = trex.dorms.map((name, i) => {
         hosts_lookup.set(name, i)
-        const color = Color.from_hex(trex.colors.dorms[name])!
+        const color = Color.from_hex(trex.colors.dorms[name]) ?? new Color(0.5, 0.5, 0.5)
         return { name, color }
     })
     const tags_lookup = new Map<string, number>()
     const tags: TagInfo[] = trex.tags.map((name, i) => {
         tags_lookup.set(name, i)
-        const color = Color.from_hex(trex.colors.tags[name])!
+        const color = Color.from_hex(trex.colors.tags[name]) ?? new Color(0.5, 0.5, 0.5)
         return { name, color }
     })
 
