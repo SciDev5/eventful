@@ -20,8 +20,18 @@
 
 
 .timeline_space_scroll {
+    position: relative;
     flex: 1 1;
     overflow-y: scroll;
+}
+
+.timeline_time_indicator {
+    position: absolute;
+    left: calc(var(--em_per_hr) * var(--hrs) * 1em);
+    width: 1px;
+    background: #77f8;
+    top: 0px;
+    bottom: 0px;
 }
 
 .track {

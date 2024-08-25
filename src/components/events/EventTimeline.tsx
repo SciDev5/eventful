@@ -1,7 +1,7 @@
 "use client";
 
 import { EventInfo, EventSchedule, Timerange } from "@/data/schedule";
-import { Attributes, Fragment, RefObject, useCallback, useMemo, useState } from "react";
+import { Attributes, Fragment, RefObject, useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./EventTimeline.module.css";
 import { css_vars } from "@/util/css";
 import { swap } from "@/util/arr";
@@ -63,6 +63,7 @@ export function EventTimeline({ event_schedule, timerange, em_per_hr, event_filt
                     Inner={TimelineTrackTime}
                 />
                 <div className={styles.timeline_space_scroll}>
+                    <TimeIndicator start={timerange.start} />
                     {
                         useMemo(() => tracks.map((t, i) => (
                             <TimelineTrack
@@ -78,6 +79,23 @@ export function EventTimeline({ event_schedule, timerange, em_per_hr, event_filt
             </div>
         </div>
     )
+}
+
+function TimeIndicator({ start }: { start: Date }) {
+    const [hrs, set_hrs] = useState(-1)
+    useEffect(() => {
+        let id = -1;
+        const callback = () => {
+            set_hrs((Date.now() - start.getTime()) / 1000 / 60 / 60)
+            setTimeout(callback, 10000)
+        }
+        callback()
+        return () => clearTimeout(id)
+    }, [start])
+    return (<div
+        className={styles.timeline_time_indicator}
+        style={css_vars({ hrs })}
+    />)
 }
 
 function TimelineTrackTime({ date }: { date: Date }) {
