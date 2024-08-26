@@ -36,7 +36,7 @@ export async function fetch_trex(): Promise<TRexAPIResponse> {
     return (await (await fetch("https://rex.mit.edu/api.json")).json()) as TRexAPIResponse
 }
 
-export function trex_to_schedule(trex: TRexAPIResponse): EventSchedule {
+export function trex_to_schedule(id: string, trex: TRexAPIResponse): EventSchedule {
     const locations_lookup = new Map<string, number>()
     const locations: LocationInfo[] = []
     const groups_lookup = new Map<string, number>()
@@ -89,6 +89,7 @@ export function trex_to_schedule(trex: TRexAPIResponse): EventSchedule {
         })
 
     return {
+        id,
         name: trex.name,
         time: new Timerange(new Date(trex.start), new Date(trex.end)),
         events,

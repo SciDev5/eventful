@@ -9,11 +9,14 @@ import { Chip } from "../chip/Chip";
 import { Color } from "@/util/color";
 import { EventModal, EventModalShower } from "./EventModal";
 
-export function EventTimeline({ event_schedule, timerange, em_per_hr, event_filter, color_from_hosts, time_scroll_ref }: {
+export type FavoriteId = string
+
+export function EventTimeline({ event_schedule, timerange, em_per_hr, event_filter, color_from_hosts, time_scroll_ref, favorites }: {
     event_schedule: EventSchedule,
     timerange: Timerange,
     em_per_hr: number | "inherit",
     event_filter: (event: EventInfo) => boolean,
+    favorites: FavoriteId[],
     color_from_hosts?: boolean,
     time_scroll_ref?: RefObject<HTMLDivElement>,
 }) {
@@ -55,7 +58,7 @@ export function EventTimeline({ event_schedule, timerange, em_per_hr, event_filt
             style={css_vars({ length_hours: timerange.length_hours, ...em_per_hr !== "inherit" ? { em_per_hr } : {} })}
             ref={time_scroll_ref}
         >
-            <EventModalShower control_ref={modal_control} schedule={event_schedule} />
+            <EventModalShower control_ref={modal_control} schedule={event_schedule} favorites={favorites} />
             <div className={styles.timeline_space_scroll_container}>
                 <TimelineTrack
                     track_data={timetrack}

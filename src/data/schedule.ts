@@ -1,6 +1,7 @@
 import { Color } from "../util/color"
 
 export interface EventSchedule {
+    readonly id: string,
     readonly time: Timerange,
     readonly name: string,
     readonly tags: TagInfo[],

@@ -114,3 +114,35 @@
     text-wrap: nowrap;
     position: relative;
 }
+
+.favorite {
+    position: absolute;
+    right: 1em;
+    top: 3.5em;
+    width: 3em;
+    height: 3em;
+    border: none;
+    clip-path: polygon(20% 0%, 20% 100%, 50% 70%, 80% 100%, 80% 0%);
+}
+
+.favorite.favorited::after {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 3em;
+    height: 3em;
+    content: "";
+    border: none;
+    /* background: var(--color_light); */
+    background: #6667;
+    mix-blend-mode: color-dodge;
+    clip-path: polygon(20% 0%, 20% 100%, 50% 70%, 80% 100%, 80% 0%);
+}
+
+.favorited {
+    background: var(--color);
+}
+
+.unfavorited {
+    background: #7774;
+}

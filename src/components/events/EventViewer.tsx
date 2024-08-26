@@ -1,11 +1,21 @@
 import { EventSchedule } from "@/data/schedule";
 import { FilterBar, Toggle, NameFilter, TaglikeFilter, useComposedFilters } from "../filter/FilterBar";
-import { EventTimeline } from "./EventTimeline";
+import { EventTimeline, FavoriteId } from "./EventTimeline";
 import styles from "./EventViewer.module.css"
-import { useCallback, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { css_vars } from "@/util/css";
 import { clamp } from "@/util/math";
 
+
+const FAVORITES_LOCALHOST_ID = "fav_"
+export function save_favorites(event_id: string, favorites: FavoriteId[]) {
+    const id = FAVORITES_LOCALHOST_ID + event_id
+    localStorage.setItem(id, JSON.stringify(favorites))
+}
+export function load_favorites(event_id: string,): FavoriteId[] {
+    const id = FAVORITES_LOCALHOST_ID + event_id
+    return JSON.parse(localStorage.getItem(id) ?? "null") as FavoriteId[] ?? []
+}
 
 export function EventViewerDataMissing({ failed }: { failed: string | false }) {
     return (
@@ -23,7 +33,12 @@ export function EventViewerDataMissing({ failed }: { failed: string | false }) {
 
 export function EventViewer({ schedule }: { schedule: EventSchedule }) {
     const [color_from_hosts, set_color_from_hosts] = useState(true)
-    const [event_filter, set_host_filter, set_tag_filter, set_name_filter] = useComposedFilters(3)
+    const [show_only_favorites, set_show_only_favorites] = useState(false)
+    const [event_filter, set_host_filter, set_tag_filter, set_name_filter, set_favorites_filter] = useComposedFilters(4)
+    const [favorites, _set_favorites] = useState<FavoriteId[]>([])
+    useEffect(() => {
+        _set_favorites(load_favorites(schedule.id))
+    }, [schedule])
 
     const [em_per_hr, set_em_per_hr] = useState(8)
     const container_ref = useRef<HTMLDivElement>(null)
@@ -62,6 +77,18 @@ export function EventViewer({ schedule }: { schedule: EventSchedule }) {
                     value={color_from_hosts}
                     on_change={v => set_color_from_hosts(v)}
                 />
+                <Toggle
+                    label={show_only_favorites ? "Show All" : "Show Favorites"}
+                    value={show_only_favorites}
+                    on_change={v => {
+                        set_show_only_favorites(v)
+                        set_favorites_filter(v ? (
+                            x => favorites.includes(x.name)
+                        ) : (
+                            () => true
+                        ))
+                    }}
+                />
             </FilterBar>
             <div className={styles.timeline_container} style={css_vars({ em_per_hr })} >
                 <EventTimeline
@@ -71,6 +98,7 @@ export function EventViewer({ schedule }: { schedule: EventSchedule }) {
                     event_filter={event_filter}
                     timerange={useMemo(() => schedule.events.map(v => v.time).reduce((a, b) => a.merge(b)).round_outward(60 * 60 * 1000), [schedule])}
                     time_scroll_ref={time_scroll_ref}
+                    favorites={favorites}
                 />
             </div>
             <div className={styles.zoom} >
