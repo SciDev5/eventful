@@ -66,7 +66,7 @@ export function EventTimeline({ event_schedule, timerange, em_per_hr, event_filt
                     Inner={TimelineTrackTime}
                 />
                 <div className={styles.timeline_space_scroll}>
-                    <TimeIndicator start={timerange.start} />
+                    <TimeIndicator timerange={timerange} />
                     {
                         useMemo(() => tracks.map((t, i) => (
                             <TimelineTrack
@@ -84,21 +84,25 @@ export function EventTimeline({ event_schedule, timerange, em_per_hr, event_filt
     )
 }
 
-function TimeIndicator({ start }: { start: Date }) {
-    const [hrs, set_hrs] = useState(-1)
+function TimeIndicator({ timerange }: { timerange: Timerange }) {
+    const [hrs, set_hrs] = useState<null | number>(null)
     useEffect(() => {
         let id = -1;
         const callback = () => {
-            set_hrs((Date.now() - start.getTime()) / 1000 / 60 / 60)
+            set_hrs(
+                timerange.contains(new Date())
+                    ? (Date.now() - timerange.start.getTime()) / 1000 / 60 / 60
+                    : null
+            )
             setTimeout(callback, 10000)
         }
         callback()
         return () => clearTimeout(id)
-    }, [start])
-    return (<div
+    }, [timerange])
+    return (hrs != null ? <div
         className={styles.timeline_time_indicator}
         style={css_vars({ hrs })}
-    />)
+    /> : <></>)
 }
 
 function TimelineTrackTime({ date }: { date: Date }) {

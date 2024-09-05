@@ -43,6 +43,9 @@ export class Timerange {
     overlaps(other: Timerange): boolean {
         return other.start < this.end && this.start < other.end
     }
+    contains(time: Date): boolean {
+        return time < this.end && time >= this.start
+    }
     merge(other: Timerange): Timerange {
         return new Timerange(
             this.start < other.start ? this.start : other.start,
