@@ -1,0 +1,49 @@
+.cal_monthly {}
+
+.cal_monthly>.week_header {
+    display: flex;
+    flex-direction: row;
+}
+
+.cal_monthly>.week_header>div {
+    flex: 1 1;
+    text-align: center;
+    font-weight: bold;
+}
+
+.cal_monthly>.week {
+    display: flex;
+    flex-direction: row;
+}
+
+.cal_monthly>.week>.day {
+    flex: 1 1;
+    border: 1px solid #333;
+    padding: 1em;
+}
+
+.cal_monthly>.week>.day.out_of_range {
+    opacity: 0.3;
+}
+
+.cal_monthly>.week>.day.today {
+    background: #444;
+}
+
+.cal_monthly>.week>.day>div:nth-child(1) {
+    text-align: center;
+}
+
+.cal_daily {
+    display: flex;
+    flex-direction: row;
+}
+
+.cal_daily>.day {
+    flex: 1 1;
+    border: 1px solid #333;
+}
+
+.cal_daily>.day.today {
+    background: #444;
+}

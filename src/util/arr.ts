@@ -8,3 +8,6 @@ export function shuffle<T>(arr: T[]) {
         swap(arr, i, Math.floor(Math.random() * arr.length))
     }
 }
+export function range_to_arr<T>(i0: number, n: number, map: (i: number) => T): T[] {
+    return new Array(n).fill(0).map((_, i) => map(i + i0))
+}
