@@ -1,9 +1,10 @@
 import { createContext, useContext } from "react"
 import styles from "./Calendar.module.css"
-import { range_to_arr as map_range } from "@/util/arr"
-import { date_to_day, day_int, day_to_date, day_weekday, month_int, month_length, month_start_weekday } from "@/util/datetime"
-import { uint } from "@/common/ty_shared"
+import { range_to_arr } from "@/common/util/arr"
+import { date_to_day, day_int, day_to_date, day_weekday, MILLISECONDS_PER_DAY, MILLISECONDS_PER_HOUR, month_int, month_length, month_start_weekday } from "@/common/util/datetime"
+import { ms_int, uint } from "@/common/ty_shared"
 import { useSettings } from "../settings/settings"
+import { css_vars } from "@/util/css"
 
 export function TESTCAL() {
     const d = date_to_day(new Date())
@@ -32,16 +33,16 @@ function CalendarMonth({
     return (
         <div className={styles.cal_monthly}>
             <div className={styles.week_header}>
-                {map_range(0, 7, i => (
+                {range_to_arr(0, 7, i => (
                     <div key={i}>{
                         new Date(year, month, 8 + i - start_weekday)
                             .toLocaleString(undefined, { weekday: "short" })
                     }</div>
                 ))}
             </div>
-            {map_range(0, n_weeks, week_i => (
+            {range_to_arr(0, n_weeks, week_i => (
                 <div key={week_i} className={styles.week}>
-                    {map_range(7 * week_i - start_weekday, 7, day_i => (
+                    {range_to_arr(7 * week_i - start_weekday, 7, day_i => (
                         <CalendarMonthDay {...{
                             day_i,
                             n_days,
@@ -90,18 +91,41 @@ function CalendarDays({
     const today = date_to_day(new Date())
     return (
         <div className={styles.cal_daily}>
-            {map_range(start, n, day_i => (
-                <div
-                    className={[
-                        styles.day,
-                        ...today == day_i ? [styles.today] : [],
-                    ].join(" ")}
-                    key={day_i}
-                >
-                    <div>{day_to_date(day_i).toLocaleDateString(undefined, { weekday: "short", day: "numeric" })}</div>
-                    <CalendarDaysDayContent day_i={day_i} />
+            <div className={styles.head}>
+                <div className={styles.times} />
+                {range_to_arr(start, n, day_i => (
+                    <div
+                        className={[
+                            styles.day,
+                            ...today == day_i ? [styles.today] : [],
+                        ].join(" ")}
+                        key={day_i}
+                    >
+                        <div>{day_to_date(day_i).toLocaleDateString(undefined, { weekday: "short", day: "numeric" })}</div>
+                    </div>
+                ))}
+            </div>
+            <div className={styles.body}>
+                <div className={styles.times}>
+                    {range_to_arr(0, 24, hr => (
+                        <div>
+                            {new Date(0, 0, 0, hr, 0).toLocaleTimeString(undefined, { hour: "numeric" })}
+                            {/* {new Date(0, 0, 0, hr, 0).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: false })} */}
+                        </div>
+                    ))}
                 </div>
-            ))}
+                {range_to_arr(start, n, day_i => (
+                    <div
+                        className={[
+                            styles.day,
+                            ...today == day_i ? [styles.today] : [],
+                        ].join(" ")}
+                        key={day_i}
+                    >
+                        <CalendarDaysDayContent day_i={day_i} />
+                    </div>
+                ))}
+            </div>
         </div>
     )
 }
@@ -111,8 +135,61 @@ function CalendarDaysDayContent({
     day_i: day_int,
 }) {
     return (
-        <div>
-            ...content...
-        </div>
+        <>
+            <CalendarDayEvent {...{
+                event_data_placeholder: "helloworld",
+                channel_i: 0,
+                channel_n: 1,
+                ms_start: 3 * MILLISECONDS_PER_HOUR,
+                ms_end: 4.5 * MILLISECONDS_PER_HOUR,
+            }} />
+
+            <CalendarDayEvent {...{
+                event_data_placeholder: "abc",
+                channel_i: 0,
+                channel_n: 2,
+                ms_start: 5 * MILLISECONDS_PER_HOUR,
+                ms_end: 7 * MILLISECONDS_PER_HOUR,
+            }} />
+            <CalendarDayEvent {...{
+                event_data_placeholder: "def",
+                channel_i: 1,
+                channel_n: 2,
+                ms_start: 6 * MILLISECONDS_PER_HOUR,
+                ms_end: 8 * MILLISECONDS_PER_HOUR,
+            }} />
+        </>
     )
+}
+function CalendarDayEvent({
+    event_data_placeholder,
+    channel_n,
+    channel_i,
+    ms_start,
+    ms_end,
+}: {
+    event_data_placeholder: string,
+    channel_n: number,
+    channel_i: number,
+    ms_start: ms_int,
+    ms_end: ms_int,
+}) {
+    if (ms_end < ms_start) { return (<>!!!err!!!</>) }
+
+    return (<div
+        className={
+            styles.event
+            + (ms_start < 0 ? " " + styles.cut_start : "")
+            + (ms_end > MILLISECONDS_PER_DAY ? " " + styles.cut_end : "")
+        }
+        style={css_vars({
+            channel_n,
+            channel_i,
+            start_hrs: Math.max(ms_start, 0) / MILLISECONDS_PER_HOUR,
+            len_hrs: (Math.min(ms_end, MILLISECONDS_PER_DAY) - Math.max(ms_start, 0)) / MILLISECONDS_PER_HOUR,
+        })}
+    >
+        {event_data_placeholder}
+    </div>)
+
 }

@@ -1,4 +1,4 @@
-import { Color } from "../util/color"
+import { Color } from "../common/util/color"
 
 export interface EventSchedule {
     readonly id: string,

@@ -1,4 +1,4 @@
-import { Color } from "../../util/color";
+import { Color } from "../../common/util/color";
 import { EventInfo, EventSchedule, GroupInfo, HostInfo, LocationInfo, TagInfo, Timerange } from "../schedule";
 
 export type TRexAPIResponse = {

@@ -4,9 +4,9 @@ import { EventInfo, EventSchedule, Timerange } from "@/data/schedule";
 import { Attributes, Fragment, RefObject, useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./EventTimeline.module.css";
 import { css_vars } from "@/util/css";
-import { swap } from "@/util/arr";
+import { swap } from "@/common/util/arr";
 import { Chip } from "../chip/Chip";
-import { Color } from "@/util/color";
+import { Color } from "@/common/util/color";
 import { EventModal, EventModalShower } from "./EventModal";
 
 export type FavoriteId = string

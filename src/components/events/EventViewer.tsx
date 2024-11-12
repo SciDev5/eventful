@@ -4,7 +4,7 @@ import { EventTimeline, FavoriteId } from "./EventTimeline";
 import styles from "./EventViewer.module.css"
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { css_vars } from "@/util/css";
-import { clamp } from "@/util/math";
+import { clamp } from "@/common/util/math";
 
 
 const FAVORITES_LOCALHOST_ID = "fav_"

@@ -1,4 +1,4 @@
-import { Color } from "@/util/color";
+import { Color } from "@/common/util/color";
 import style from "./Chip.module.css"
 import { css_vars } from "@/util/css";
 

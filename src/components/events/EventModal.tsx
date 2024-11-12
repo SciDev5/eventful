@@ -3,7 +3,7 @@ import styles from "./EventModal.module.css"
 import { EventInfo, EventSchedule } from "@/data/schedule";
 import { css_vars } from "@/util/css";
 import { Chip } from "../chip/Chip";
-import { Color } from "@/util/color";
+import { Color } from "@/common/util/color";
 import { FavoriteId } from "./EventTimeline";
 import { save_favorites } from "./EventViewer";
 

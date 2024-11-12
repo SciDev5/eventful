@@ -36,14 +36,77 @@
 
 .cal_daily {
     display: flex;
+    flex-direction: column;
+
+    --hour_height: 4em;
+
+    height: 100vh;
+    /* testing */
+}
+
+.cal_daily>.head,
+.cal_daily>.body {
+    display: flex;
     flex-direction: row;
 }
 
-.cal_daily>.day {
-    flex: 1 1;
-    border: 1px solid #333;
+.cal_daily>.body {
+    flex: 1 0;
+    overflow-y: scroll;
 }
 
-.cal_daily>.day.today {
+.cal_daily>.head {
+    flex: 0 0;
+}
+
+.cal_daily>.body>.times,
+.cal_daily>.head>.times {
+    flex: 0.5 0;
+    min-width: 5em;
+}
+
+.cal_daily>.body>.times {
+    display: flex;
+    flex-direction: column;
+}
+
+.cal_daily>.body>.times>div {
+    flex: 1 0;
+    border-top: 1px solid #444;
+    text-align: end;
+    min-height: var(--hour_height);
+}
+
+.cal_daily>.body>.day,
+.cal_daily>.head>.day {
+    flex: 1 1;
+}
+
+.cal_daily>.head>.day {
+    border: 1px solid #f0f;
+}
+
+.cal_daily>.body>.day {
+    border: 1px solid #333;
+    min-height: calc(24 * var(--hour_height));
+    position: relative;
+}
+
+.cal_daily>.body>.day>.event {
+    border: 1px solid #07f;
+    background: #07f1;
+
+    position: absolute;
+    /* channel_n
+    channel_i
+    start_hrs
+    len_hrs */
+    left: calc(100% * var(--channel_i) / var(--channel_n));
+    width: calc(100% / var(--channel_n));
+    top: calc(var(--hour_height) * var(--start_hrs));
+    height: calc(var(--hour_height) * var(--len_hrs));
+}
+
+.cal_daily>.body>.day.today {
     background: #444;
 }
