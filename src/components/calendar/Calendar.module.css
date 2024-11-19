@@ -97,14 +97,18 @@
     background: #07f1;
 
     position: absolute;
-    /* channel_n
-    channel_i
-    start_hrs
-    len_hrs */
-    left: calc(100% * var(--channel_i) / var(--channel_n));
-    width: calc(100% / var(--channel_n));
+    left: calc(100% * var(--track_i) / var(--track_n));
+    width: calc(100% / var(--track_n));
     top: calc(var(--hour_height) * var(--start_hrs));
     height: calc(var(--hour_height) * var(--len_hrs));
+}
+
+.cal_daily>.body>.day>.event.cut_start {
+    border-top: 2px solid #ff0;
+}
+
+.cal_daily>.body>.day>.event.cut_end {
+    border-bottom: 2px solid #ff0;
 }
 
 .cal_daily>.body>.day.today {

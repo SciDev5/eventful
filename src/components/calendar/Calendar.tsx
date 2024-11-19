@@ -2,15 +2,18 @@ import { createContext, useContext } from "react"
 import styles from "./Calendar.module.css"
 import { range_to_arr } from "@/common/util/arr"
 import { date_to_day, day_int, day_to_date, day_weekday, MILLISECONDS_PER_DAY, MILLISECONDS_PER_HOUR, month_int, month_length, month_start_weekday } from "@/common/util/datetime"
-import { ms_int, uint } from "@/common/ty_shared"
+import { ID, ms_int, SchedulerSolidifyInterval, Timerange, uint } from "@/common/ty_shared"
 import { useSettings } from "../settings/settings"
 import { css_vars } from "@/util/css"
+import { Eventslist } from "@/common/event_management"
+import { None } from "@/common/util/functional"
 
 export function TESTCAL() {
+    const { zero_weekday } = useSettings()
     const d = date_to_day(new Date())
     return (
         // <CalendarMonth start={2024 * 12 + 9} />
-        <CalendarDays start={d - day_weekday(d)} n={7} />
+        <CalendarDays start={d - day_weekday(d) + zero_weekday} n={7} />
     )
 }
 
@@ -108,7 +111,9 @@ function CalendarDays({
             <div className={styles.body}>
                 <div className={styles.times}>
                     {range_to_arr(0, 24, hr => (
-                        <div>
+                        <div
+                            key={hr}
+                        >
                             {new Date(0, 0, 0, hr, 0).toLocaleTimeString(undefined, { hour: "numeric" })}
                             {/* {new Date(0, 0, 0, hr, 0).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: false })} */}
                         </div>
@@ -122,7 +127,83 @@ function CalendarDays({
                         ].join(" ")}
                         key={day_i}
                     >
-                        <CalendarDaysDayContent day_i={day_i} />
+                        <CalendarDaysDayContent day_i={day_i} events={new Eventslist([
+                            {
+                                id: new ID(0),
+                                name: "the",
+                                default_timezone: -5,
+                                description: ":3",
+                                host: [],
+                                location: 0,
+                                schedule_next: [],
+                                schedule_solidify: { interval: SchedulerSolidifyInterval.Daily, n_lead: 0 },
+                                times: [
+                                    {
+                                        id: new ID(0),
+                                        cancelled: false,
+                                        host: None,
+                                        location: None,
+                                        time: new Timerange(new Date(Date.now() - 1000 * 60 * 60 * 1), new Date(Date.now() + 1000 * 60 * 60 * 1)),
+                                    },
+                                    {
+                                        id: new ID(1),
+                                        cancelled: false,
+                                        host: None,
+                                        location: None,
+                                        time: new Timerange(new Date(Date.now() + MILLISECONDS_PER_DAY), new Date(Date.now() + 1000 * 60 * 60 * 2 + 2 * MILLISECONDS_PER_DAY)),
+                                    },
+                                    {
+                                        id: new ID(2),
+                                        cancelled: false,
+                                        host: None,
+                                        location: None,
+                                        time: new Timerange(new Date(Date.now() - MILLISECONDS_PER_DAY - 1000 * 60 * 60 * 5), new Date(Date.now() + 1000 * 60 * 60 * 2 + 2 * MILLISECONDS_PER_DAY)),
+                                    },
+                                    {
+                                        id: new ID(3),
+                                        cancelled: false,
+                                        host: None,
+                                        location: None,
+                                        time: new Timerange(new Date(Date.now() - 1000 * 60 * 60 * 5), new Date(Date.now() - 1000 * 60 * 60 * 3)),
+                                    },
+                                    {
+                                        id: new ID(4),
+                                        cancelled: false,
+                                        host: None,
+                                        location: None,
+                                        time: new Timerange(new Date(Date.now() - 1000 * 60 * 60 * 4), new Date(Date.now() - 1000 * 60 * 60 * 2)),
+                                    },
+                                    {
+                                        id: new ID(5),
+                                        cancelled: false,
+                                        host: None,
+                                        location: None,
+                                        time: new Timerange(new Date(Date.now() - 1000 * 60 * 60 * 6), new Date(Date.now() - 1000 * 60 * 60 * 4)),
+                                    },
+                                    {
+                                        id: new ID(6),
+                                        cancelled: false,
+                                        host: None,
+                                        location: None,
+                                        time: new Timerange(new Date(Date.now() - 1000 * 60 * 60 * 8), new Date(Date.now() - 1000 * 60 * 60 * 7)),
+                                    },
+                                    {
+                                        id: new ID(7),
+                                        cancelled: false,
+                                        host: None,
+                                        location: None,
+                                        time: new Timerange(new Date(Date.now() - 1000 * 60 * 60 * 8), new Date(Date.now() - 1000 * 60 * 60 * 7)),
+                                    },
+                                    {
+                                        id: new ID(8),
+                                        cancelled: false,
+                                        host: None,
+                                        location: None,
+                                        time: new Timerange(new Date(Date.now() - 1000 * 60 * 60 * 8), new Date(Date.now() - 1000 * 60 * 60 * 7)),
+                                    },
+                                ]
+                            }
+                        ])} />
                     </div>
                 ))}
             </div>
@@ -131,46 +212,39 @@ function CalendarDays({
 }
 function CalendarDaysDayContent({
     day_i,
+    events,
 }: {
     day_i: day_int,
+    events: Eventslist,
 }) {
+    const ms_day_start = day_to_date(day_i).getTime()
+    const day_events = events.starts_or_ends_during_day(day_i)
+    console.log(day_i, day_events, events);
+
+    const assembled = assemble_tracks(ms_day_start, day_events.map(event => ({ time: event.time, event: event })))
+
     return (
         <>
-            <CalendarDayEvent {...{
-                event_data_placeholder: "helloworld",
-                channel_i: 0,
-                channel_n: 1,
-                ms_start: 3 * MILLISECONDS_PER_HOUR,
-                ms_end: 4.5 * MILLISECONDS_PER_HOUR,
-            }} />
-
-            <CalendarDayEvent {...{
-                event_data_placeholder: "abc",
-                channel_i: 0,
-                channel_n: 2,
-                ms_start: 5 * MILLISECONDS_PER_HOUR,
-                ms_end: 7 * MILLISECONDS_PER_HOUR,
-            }} />
-            <CalendarDayEvent {...{
-                event_data_placeholder: "def",
-                channel_i: 1,
-                channel_n: 2,
-                ms_start: 6 * MILLISECONDS_PER_HOUR,
-                ms_end: 8 * MILLISECONDS_PER_HOUR,
-            }} />
+            {assembled.map(({ track_i, track_n, ms_start, ms_end, event }, i) => (
+                <CalendarDayEvent
+                    {...{ ms_start, ms_end, track_i, track_n }}
+                    event_data_placeholder={event.id.id + "#"}
+                    key={i}
+                />
+            ))}
         </>
     )
 }
 function CalendarDayEvent({
     event_data_placeholder,
-    channel_n,
-    channel_i,
+    track_n,
+    track_i,
     ms_start,
     ms_end,
 }: {
     event_data_placeholder: string,
-    channel_n: number,
-    channel_i: number,
+    track_n: uint,
+    track_i: uint,
     ms_start: ms_int,
     ms_end: ms_int,
 }) {
@@ -183,8 +257,8 @@ function CalendarDayEvent({
             + (ms_end > MILLISECONDS_PER_DAY ? " " + styles.cut_end : "")
         }
         style={css_vars({
-            channel_n,
-            channel_i,
+            track_n,
+            track_i,
             start_hrs: Math.max(ms_start, 0) / MILLISECONDS_PER_HOUR,
             len_hrs: (Math.min(ms_end, MILLISECONDS_PER_DAY) - Math.max(ms_start, 0)) / MILLISECONDS_PER_HOUR,
         })}
@@ -192,4 +266,79 @@ function CalendarDayEvent({
         {event_data_placeholder}
     </div>)
 
+}
+
+function assemble_tracks<T>(
+    ms_day_start: uint,
+    events: {
+        time: Timerange,
+        event: T,
+    }[],
+): {
+    track_n: uint,
+    track_i: uint,
+    ms_start: ms_int,
+    ms_end: ms_int,
+    event: T,
+}[] {
+    const tracks: ({ time: Timerange, event: T }[])[] = []
+    const events_ordered: ({ track_i: uint, event: { time: Timerange, event: T } })[] = []
+    for (const event of events.toSorted((a, b) => a.time.end.getTime() - b.time.end.getTime())) {
+        let track_i = tracks.findIndex(track => !track[track.length - 1].time.overlaps(event.time))
+        if (track_i === -1) track_i = (() => {
+            const new_track: { time: Timerange, event: T }[] = []
+            tracks.push(new_track)
+            return tracks.length - 1
+        })()
+
+        tracks[track_i].push(event)
+        events_ordered.push({ track_i, event })
+    }
+
+    if (events_ordered.length === 0) {
+        return []
+    }
+
+
+    const events_out = []
+    let streak_bounds: Timerange = events_ordered[0].event.time
+    let max_track_i = events_ordered[0].track_i
+    const events_streak = [{ track_i: 0, ...events_ordered[0].event }]
+    for (const { track_i, event: { time, event } } of events_ordered.slice(1)) {
+        if (streak_bounds.overlaps(time)) {
+            events_streak.push({ track_i, time, event })
+            if (track_i > max_track_i) {
+                max_track_i = track_i
+            }
+            streak_bounds = streak_bounds.merge(time)
+        } else {
+            events_out.push(...events_streak.map(({
+                event,
+                time,
+                track_i,
+            }) => ({
+                ms_start: time.start_ms - ms_day_start,
+                ms_end: time.end_ms - ms_day_start,
+                track_i,
+                track_n: max_track_i + 1,
+                event,
+            })))
+            events_streak.length = 0
+            events_streak.push({ track_i, time, event })
+            max_track_i = track_i
+            streak_bounds = time
+        }
+    }
+    events_out.push(...events_streak.map(({
+        event,
+        time,
+        track_i,
+    }) => ({
+        ms_start: time.start_ms - ms_day_start,
+        ms_end: time.end_ms - ms_day_start,
+        track_i,
+        track_n: max_track_i + 1,
+        event,
+    })))
+    return events_out
 }

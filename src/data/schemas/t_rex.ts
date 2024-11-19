@@ -1,5 +1,6 @@
+import { Timerange } from "@/common/ty_shared";
 import { Color } from "../../common/util/color";
-import { EventInfo, EventSchedule, GroupInfo, HostInfo, LocationInfo, TagInfo, Timerange } from "../schedule";
+import { EventInfo, EventSchedule, GroupInfo, HostInfo, LocationInfo, TagInfo } from "../schedule";
 
 export type TRexAPIResponse = {
     /** The title of the current experience, such as "REX 2023" */

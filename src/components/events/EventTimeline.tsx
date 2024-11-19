@@ -1,6 +1,6 @@
 "use client";
 
-import { EventInfo, EventSchedule, Timerange } from "@/data/schedule";
+import { EventInfo, EventSchedule } from "@/data/schedule";
 import { Attributes, Fragment, RefObject, useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./EventTimeline.module.css";
 import { css_vars } from "@/util/css";
@@ -8,6 +8,7 @@ import { swap } from "@/common/util/arr";
 import { Chip } from "../chip/Chip";
 import { Color } from "@/common/util/color";
 import { EventModal, EventModalShower } from "./EventModal";
+import { Timerange } from "@/common/ty_shared";
 
 export type FavoriteId = string
 
